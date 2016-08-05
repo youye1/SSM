@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--配置目标类-->
+    <bean id="helloDaoImpl" class="cn.youye.sptest.aop.HelloDaoImpl"/>
+    
+    <!--配置切面-->
+    <bean id="aspect" class="cn.youye.sptest.aop.HelloAspect"/>
+    <aop:config>
+        <aop:pointcut id="pointcut" expression="execution(* cn.youye.sptest..*.*(..))"/>
+        <aop:aspect ref="aspect">
+            <aop:before method="beforeAdvice" pointcut-ref="pointcut"/>
+            <aop:after method="afterAdvice" pointcut="execution(* cn.youye.sptest..*.*(..))"/>
+        </aop:aspect>
+    </aop:config>
+</beans>

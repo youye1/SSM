@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--namespace命名空间,对sql进行分类化管理，理解sql隔离-->
+<!--测试传统的dao方法-->
+<mapper namespace="userTest">
+
+    <!--在映射文件总配置sql语句-->
+    <!--id用于标识映射文件中的sql语句，-->
+    <!--成为statement的id(sql语句会封装到mappedStatement对象中)-->
+    <!-- #{}表示一个占位符,parameterType指定参数类型-->
+    <!-- #{id}表示接收一个输入参数，参数名就是id-->
+    <select id="getById" parameterType="int" resultType="com.youye.pojo.User">
+        SELECT * FROM user WHERE id=#{value}
+    </select>
+    <!-- 可以用${value}进行sql语句拼接，但为了防止sql注入，${}中只能使用value-->
+    <select id="getByName" parameterType="String" resultType="com.youye.pojo.User">
+        SELECT * FROM user WHERE username=#{value}
+    </select>
+
+    <!-- 获取插入对象的主键，主键返回-->
+    <!-- 只适用于自增主键-->
+    <!-- keyProperty：将查询到的主键值设置到parameterType指定的对象的某个属性-->
+    <!-- order:表示获取主键相对于insert的执行顺序-->
+    <!-- resultType：返回的结果类型-->
+    <insert id="adduser" parameterType="com.youye.pojo.User" >
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT user(id,username,birthday,sex,address)
+        VALUES (#{id},#{username},#{birthday},#{sex},#{address})
+    </insert>
+
+    <!-- 非自增主建的返回-->
+    <!-- 通过执行UUID() 来查询主键，然后将主键插入到sql语句中-->
+
+    <update id="updateuser" parameterType="com.youye.pojo.User" >
+        UPDATE user SET username=#{username},
+        birthday=#{birthday},
+        sex=#{sex},
+        address=#{address}
+        WHERE id=#{id}
+    </update>
+
+    <delete id="deleteuser" parameterType="int">
+        DELETE FROM user WHERE id=#{value}
+    </delete>
+</mapper>

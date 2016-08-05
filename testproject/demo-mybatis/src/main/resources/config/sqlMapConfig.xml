@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!-- mapperConfig.xml文件的属性定义有顺序要求，否则会报错-->
+
+
+    <properties resource="dbconfig.properties">
+    </properties>
+    <settings>
+        <!-- 延迟加载设置-->
+        <!-- 1.打开延迟加载-->
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <!-- 2.关闭积极加载-->
+        <setting name="aggressiveLazyLoading" value="false"/>
+
+        <!-- 开启二级缓存-->
+        <setting name="cacheEnabled" value="true"/>
+
+    </settings>
+
+    <!-- 定义别名，简化开发-->
+    <typeAliases>
+        <!-- 定义User的别名，在下面需要引用User时，只需要使用user
+        而不是使用User的全路径名称-->
+        <!-- 针对定义单个别名-->
+        <!--<typeAlias type="com.youye.pojo.User" alias="user"/>-->
+
+        <!-- 批量定义别名，而别名就是类名，首字母大写或小写均可-->
+        <package name="cn.youye.mybatis.pojo"/>
+    </typeAliases>
+
+    <!-- 通过typeHandlers完成jdbc类型和Java类型转换-->
+    <!--<typeHandlers></typeHandlers>-->
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"></transactionManager>
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!-- 加载映射文件-->
+    <mappers>
+        <!-- 通过resource方法一次加载一个映射文件-->
+        <mapper resource="config/sqlmap/UserMapper.xml"/>
+        <mapper resource="config/mapper/UserMapper.xml"/>
+        <mapper resource="config/mapper/OrderMapper.xml"/>
+
+        <!-- 通过mapper接口来加载单个映射文件，需要遵循一定的规则-->
+        <!-- 1.使用mapper代理方法的前提下-->
+        <!-- mapper.xml文件 和 mapper接口文件必须是同名称，并且在同一个文件夹下-->
+        <!--<mapper class="com.youye.mapper.UserMapper"/>-->
+
+        <!-- 批量加载mapper
+        指定mapper接口的包名，mybatis自动的扫描包-->
+        <!--<package name="com.youye.mapper"/>-->
+
+        <!-- 以上方法失败的原因是在target文件中无法读取到Java文件夹下的xml文件，如果需要，可以再
+        pom.xml文件下的build中进行resources设置，但是会覆盖原来默认的resources配置,因此全部重新配置一下-->
+
+    </mappers>
+
+</configuration>

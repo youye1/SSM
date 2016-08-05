@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+
+    <!-- 对于注解的handler可以进行单个注释，也可以组建扫描-->
+    <!-- 可以扫描controller service 等组件-->
+    <context:component-scan base-package="cn.youye.smt.controller"/>
+    <context:component-scan base-package="cn.youye.smt.service"/>
+    <!--使用这个mvc注解驱动，可以代替上面两行映射器和适配器的配置
+        它默认加载了很多参数的绑定方法，如:json的转换
+        实际开发 一般使用它-->
+    <mvc:annotation-driven></mvc:annotation-driven>
+
+    <!-- 3.配置视图解析器-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <!-- 配置jsp路径的前缀 -->
+        <property name="prefix" value="/WEB-INF/views/"/>
+        <!-- 配置jsp路径的后缀 -->
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+</beans>

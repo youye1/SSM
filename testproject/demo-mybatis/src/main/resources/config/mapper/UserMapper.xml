@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--namespace命名空间,对sql进行分类化管理，理解sql隔离-->
+<!--测试mapper接口的mapper.xml文件-->
+<!--namespace相当于mapper的接口地址-->
+<mapper namespace="cn.youye.mybatis.mapper.UserMapper">
+
+    <!-- 开启本mapper的namespace下的二级缓存-->
+    <!-- type：设置缓存类型，用自己整合的ehcache-->
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
+
+
+    <!-- 定义sql片段 id:sql片段的唯一标识
+    经验：一般sql片段是根据单标来定义的，这样这个sql片段的可重用性才高
+         一般来说 sql片段中不要包含where-->
+    <sql id="query_user_where">
+        <if test="userCustom!=null">
+            <if test="userCustom.username!=null and userCustom.username!=''">
+                AND user.username=#{userCustom.username}
+            </if>
+            <if test="userCustom.sex!=null and userCustom.sex!=''">
+                AND user.sex=#{userCustom.sex}
+            </if>
+            <if test="ids!=null">
+                <!-- 使用foreach遍历输入ids
+                collection：指定输入对象中集合属性
+                item：每个遍历生成的对象
+                open：开始遍历时要拼接的串
+                close：结束遍历时要拼接的串
+                separetor：遍历的两个对象之间需要拼接的串-->
+                <!-- 要实现的拼接sql串是：AND (id=1 OR id=10 OR id=45 OR id=46)-->
+                <foreach collection="ids" item="userid" open="AND(" close=")" separator="OR">
+                    id=#{userid}
+                </foreach>
+
+                <!-- 实现sql拼接为：AND id IN(1,10,40,46,)-->
+                <!--
+                <foreach collection="ids" item="userid" open="AND id IN(" close=")" separator=",">
+                    #{userid}
+                </foreach>
+                -->
+            </if>
+        </if>
+
+    </sql>
+
+
+    <!-- 定义resultMap
+    type:resultMap最终映射的Java对象
+    id:对resultMap的标识-->
+    <resultMap id="userResultMap" type="user">
+        <!-- id表示查询结果集中唯一的标识
+        column:标识查询出来的列名
+        property：标识type指定的pojo类型中的属性名-->
+        <id column="id_" property="id"/>
+        <!-- result表示对普通列的名称映射定义-->
+        <result column="username_" property="username"/>
+    </resultMap>
+
+    <!-- 多对多映射查询 -->
+    <!-- 定义resultMap -->
+    <resultMap id="UserAndItemsResultMap" type="cn.youye.pojo.User">
+        <!-- 主表：用户表 user-->
+        <id column="user_id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="sex" property="sex"/>
+        <result column="address" property="address"/>
+
+        <!-- 关联表：订单表 order-->
+        <collection property="orderList" ofType="cn.youye.pojo.Order">
+            <id column="id" property="id"/>
+            <result column="user_id" property="userId"/>
+            <result column="number" property="number"/>
+            <result column="createtime" property="createTime"/>
+            <result column="note" property="note"/>
+
+            <!-- 关联表：订单明细表 orderdetail （是order表的关联表）-->
+            <collection property="orderDetails" ofType="cn.youye.pojo.OrderDetail">
+                <id column="orderdetail_id" property="id"/>
+                <result column="orders_id" property="ordersId"/>
+                <result column="items_id" property="itemsId"/>
+                <result column="items_num" property="itemsNum"/>
+
+                <!-- 关联表：items （是orderdetail表的关联表）-->
+                <association property="items" javaType="cn.youye.pojo.Items">
+                    <id column="items_id" property="id"/>
+                    <result column="items_name" property="name"/>
+                    <result column="items_price" property="price"/>
+                    <result column="items_detail" property="detail"/>
+                </association>
+            </collection>
+        </collection>
+    </resultMap>
+
+
+
+    <!-- 用户信息的综合查询,查询条件十分复杂的情况下使用
+    暂时是使用简单查询
+    #{userCustom.username}是取出userQueryVo包装对象中的username-->
+    <select id="getUserList" parameterType="userQueryVo" resultType="userCustom">
+        -- SELECT * FROM user WHERE user.username=#{userCustom.username}
+
+        <!-- 测试动态sql
+          使用where标签的优点在于它会自动去掉查询条件的第一个and连接符-->
+        SELECT * FROM user
+        <!-- 将动态sql移到了上面的sql片段中，也可以直接使用动态sql，但会导致动态sql不可重用
+           如果指定的id不在本mapper文件中，需要前面加namespace
+           还可以引用其他的表单查询sql-->
+        <where>
+            <include refid="query_user_where"/>
+        </where>
+    </select>
+
+    <!-- 使用resultMap进行输出映射
+    resultMap:指定定义的resultMap的id,如果其他的mapper文件中也定义了同一名称的
+    resultMap，那么需要在她前面添加namespace-->
+    <select id="getUserListResultMap" parameterType="java.lang.String" resultMap="userResultMap">
+        SELECT id id_,username username_ FROM user WHERE username=#{value}
+    </select>
+
+
+    <select id="getById" parameterType="int" resultType="user">
+        SELECT * FROM user WHERE id=#{value}
+    </select>
+    <!-- 可以用${value}进行sql语句拼接，但为了防止sql注入，${}中只能使用value-->
+    <select id="getByName" parameterType="java.lang.String" resultType="user">
+        SELECT * FROM user WHERE username=#{value}
+    </select>
+
+    <select id="getAll" resultType="user">
+        SELECT * FROM user
+    </select>
+
+    <select id="getByNameAndAddress" parameterType="user" resultType="user">
+        SELECT * FROM user WHERE username=#{username} AND address=#{address}
+    </select>
+
+    <!-- 获取插入对象的主键，主键返回
+    只适用于自增主键
+    keyProperty：将查询到的主键值设置到parameterType指定的对象的某个属性
+    order:表示获取主键相对于insert的执行顺序
+    resultType：返回的结果类型-->
+    <insert id="adduser" parameterType="user" flushCache="true">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer" >
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT user(id,username,birthday,sex,address)
+        VALUES (#{id},#{username},#{birthday},#{sex},#{address})
+    </insert>
+
+    <!-- 非自增主建的返回-->
+    <!-- 通过执行UUID() 来查询主键，然后将主键插入到sql语句中-->
+
+    <update id="updateuser" parameterType="user" flushCache="true">
+        UPDATE user SET username=#{username},
+        birthday=#{birthday},
+        sex=#{sex},
+        address=#{address}
+        WHERE id=#{id}
+    </update>
+
+    <delete id="deleteuser" parameterType="int" flushCache="true">
+        DELETE FROM user WHERE id=#{value}
+    </delete>
+
+
+
+    <!-- 多对多映射查询 用户的详细订单信息-->
+    <select id="getUserAndItemsResultMap" resultMap="UserAndItemsResultMap">
+        SELECT
+        user.username,
+        user.sex,
+        user.address,
+        orders.*,
+        orderdetail.id orderdetail_id,
+        orderdetail.orders_id,
+        orderdetail.items_id,
+        orderdetail.items_num,
+        items.name items_name,
+        items.price items_price,
+        items.detail items_detail
+        FROM orders,user,orderdetail,items
+        where orders.user_id=user.id
+        AND orderdetail.orders_id=orders.id
+        AND orderdetail.items_id=items.id
+    </select>
+</mapper>
