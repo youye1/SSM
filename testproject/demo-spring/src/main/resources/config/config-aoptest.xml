@@ -5,15 +5,15 @@
        http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <!--配置目标类-->
-    <bean id="helloDaoImpl" class="cn.youye.sptest.aop.HelloDaoImpl"/>
+    <bean id="helloDaoImpl" class="cn.youye.factory.aop.HelloDaoImpl"/>
     
     <!--配置切面-->
-    <bean id="aspect" class="cn.youye.sptest.aop.HelloAspect"/>
+    <bean id="aspect" class="cn.youye.factory.aop.HelloAspect"/>
     <aop:config>
-        <aop:pointcut id="pointcut" expression="execution(* cn.youye.sptest..*.*(..))"/>
+        <aop:pointcut id="pointcut" expression="execution(* cn.youye.factory..*.*(..))"/>
         <aop:aspect ref="aspect">
             <aop:before method="beforeAdvice" pointcut-ref="pointcut"/>
-            <aop:after method="afterAdvice" pointcut="execution(* cn.youye.sptest..*.*(..))"/>
+            <aop:after method="afterAdvice" pointcut="execution(* cn.youye.factory..*.*(..))"/>
         </aop:aspect>
     </aop:config>
 </beans>

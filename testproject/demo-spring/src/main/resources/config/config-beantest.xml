@@ -6,21 +6,21 @@
        http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <!--使用无参构造器-->
-    <bean id="beanWithoutArgs" class="cn.youye.sptest.bean.HelloDaoImpl"/>
+    <bean id="beanWithoutArgs" class="cn.youye.factory.dao.impl.HelloDaoImpl"/>
 
     <!--使用有参构造器-->
-    <bean id="beanWithArgs" class="cn.youye.sptest.bean.HelloDaoImpl">
-        <constructor-arg index="0" value="Hello Args"/>
+    <bean id="beanWithArgs" class="cn.youye.factory.dao.impl.HelloDaoImpl">
+        <constructor-arg index="0" value="Hello Spring"/>
     </bean>
 
     <!--静态工厂-->
-    <bean id="beanByStaticFactory" class="cn.youye.sptest.bean.HelloStaticFactory"
+    <bean id="beanByStaticFactory" class="cn.youye.factory.bean.HelloStaticFactory"
           factory-method="newInstance">
         <constructor-arg index="0" value="Hello Static Factory"/>
     </bean>
 
     <!--定义实例工厂Bean-->
-    <bean id="beanInstanceFactory" class="cn.youye.sptest.bean.HelloInstanceFactory"/>
+    <bean id="beanInstanceFactory" class="cn.youye.factory.bean.HelloInstanceFactory"/>
     <!--使用实例工厂bean创建bean -->
     <bean id="beanInstance" factory-method="newInstance" factory-bean="beanInstanceFactory">
         <constructor-arg index="0" value="Hello Instance Factory"/>
