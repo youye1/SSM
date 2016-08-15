@@ -1,4 +1,4 @@
-package cn.youye.factory.bean.beanarrage;
+package cn.youye.factory.beanarrage;
 
 /**
  * Created by pc on 2016/7/12.

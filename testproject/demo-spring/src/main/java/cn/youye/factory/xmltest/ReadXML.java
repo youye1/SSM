@@ -30,7 +30,7 @@ public class ReadXML {
     }
 
     public static void readXml(DocumentBuilder builder) throws IOException, SAXException {
-        Document doc = builder.parse(new File("/JavaWorkSpace/SSM/testproject/demo-spring/src/main/java/cn/youye/sp/xmltest/test.xml"));
+        Document doc = builder.parse(new File("/JavaWorkSpace/SSMTest/testproject/demo-spring/src/main/java/cn/youye/factory/xmltest/test.xml"));
         Element root = doc.getDocumentElement();
         NodeList list = root.getElementsByTagName("lan");
         System.out.println("root: " + root);

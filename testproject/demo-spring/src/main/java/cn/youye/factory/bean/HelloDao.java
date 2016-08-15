@@ -1,4 +1,4 @@
-package cn.youye.factory.dao;
+package cn.youye.factory.bean;
 
 /**
  * Created by pc on 2016/7/12.

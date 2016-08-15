@@ -6,10 +6,10 @@
        http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <!--使用无参构造器-->
-    <bean id="beanWithoutArgs" class="cn.youye.factory.dao.impl.HelloDaoImpl"/>
+    <bean id="beanWithoutArgs" class="cn.youye.factory.bean.HelloDaoImpl"/>
 
     <!--使用有参构造器-->
-    <bean id="beanWithArgs" class="cn.youye.factory.dao.impl.HelloDaoImpl">
+    <bean id="beanWithArgs" class="cn.youye.factory.bean.HelloDaoImpl">
         <constructor-arg index="0" value="Hello Spring"/>
     </bean>
 

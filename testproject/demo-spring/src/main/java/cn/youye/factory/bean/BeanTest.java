@@ -1,6 +1,5 @@
 package cn.youye.factory.bean;
 
-import cn.youye.factory.dao.HelloDao;
 import org.junit.Test;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.ApplicationContext;

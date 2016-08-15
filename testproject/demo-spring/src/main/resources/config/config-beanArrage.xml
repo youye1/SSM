@@ -7,10 +7,10 @@
     <!--<bean id="car" class="cn.youye.sptest.bean.beanarrage.Car" scope="singleton"/>-->
 
     <!--prototype 每次调用都创建一个实例-->
-    <bean id="car" class="cn.youye.factory.bean.beanarrage.Car" scope="prototype"/>
+    <bean id="car" class="cn.youye.factory.beanarrage.Car" scope="prototype"/>
 
-    <bean id="boss1" class="cn.youye.factory.bean.beanarrage.Boss" p:car-ref="car"/>
-    <bean id="boss2" class="cn.youye.factory.bean.beanarrage.Boss" p:car-ref="car"/>
-    <bean id="boss3" class="cn.youye.factory.bean.beanarrage.Boss" p:car-ref="car"/>
+    <bean id="boss1" class="cn.youye.factory.beanarrage.Boss" p:car-ref="car"/>
+    <bean id="boss2" class="cn.youye.factory.beanarrage.Boss" p:car-ref="car"/>
+    <bean id="boss3" class="cn.youye.factory.beanarrage.Boss" p:car-ref="car"/>
 
 </beans>

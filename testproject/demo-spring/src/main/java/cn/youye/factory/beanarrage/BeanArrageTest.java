@@ -1,4 +1,4 @@
-package cn.youye.factory.bean.beanarrage;
+package cn.youye.factory.beanarrage;
 
 import org.junit.Test;
 import org.springframework.beans.factory.BeanFactory;
