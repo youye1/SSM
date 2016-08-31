@@ -13,8 +13,6 @@
         <module>demo-mybatis</module>
         <module>demo-smt</module>
         <module>demo-servlet</module>
-        <module>demo-mvc</module>
-        <module>demo-bms</module>
         <module>demo-test</module>
     </modules>
     <properties>
@@ -230,6 +228,12 @@
         </dependency>
         <!-- CACHE end -->
 
+        <!--aop start-->
+        <dependency>
+            <groupId>org.jboss.narayana</groupId>
+            <artifactId>common</artifactId>
+            <version>5.3.3.Final</version>
+        </dependency>
         <dependency>
             <groupId>aopalliance</groupId>
             <artifactId>aopalliance</artifactId>
@@ -245,6 +249,9 @@
             <artifactId>aspectjweaver</artifactId>
             <version>1.8.9</version>
         </dependency>
+
+        <!--aop end-->
+
         <dependency>
             <groupId>org.mortbay.jetty</groupId>
             <artifactId>jetty</artifactId>
