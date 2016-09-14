@@ -1,119 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.youye.smt.dao.UserMapper" >
-  <resultMap id="BaseResultMap" type="cn.youye.smt.entity.User" >
-    <constructor >
-      <idArg column="id" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="user_name" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="login_name" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="password" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="phone" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="img" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="email" jdbcType="VARCHAR" javaType="java.lang.String" />
-    </constructor>
-  </resultMap>
-  <sql id="Base_Column_List" >
-    id, user_name, login_name, password, phone, img, email
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.youye.smt.dao.UserMapper">
+  <sql id="UserColumns">
+      a.id AS "id",
+      a.user_name AS "userName",
+      a.login_name AS "loginName",
+      a.password AS "password",
+      a.role_id AS "role.id",
+      a.phone AS "phone",
+      a.create_date AS "createDate"
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
-    <include refid="Base_Column_List" />
-    from user
-    where id = #{id,jdbcType=VARCHAR}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
-    delete from user
-    where id = #{id,jdbcType=VARCHAR}
-  </delete>
-  <insert id="insert" parameterType="cn.youye.smt.entity.User" >
-    insert into user (id, user_name, login_name, 
-      password, phone, img, 
-      email)
-    values (#{id,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, 
-      #{password,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{img,jdbcType=VARCHAR}, 
-      #{email,jdbcType=VARCHAR})
-  </insert>
-  <insert id="insertSelective" parameterType="cn.youye.smt.entity.User" >
-    insert into user
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="userName != null" >
-        user_name,
-      </if>
-      <if test="loginName != null" >
-        login_name,
-      </if>
-      <if test="password != null" >
-        password,
-      </if>
-      <if test="phone != null" >
-        phone,
-      </if>
-      <if test="img != null" >
-        img,
-      </if>
-      <if test="email != null" >
-        email,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=VARCHAR},
-      </if>
-      <if test="userName != null" >
-        #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="loginName != null" >
-        #{loginName,jdbcType=VARCHAR},
-      </if>
-      <if test="password != null" >
-        #{password,jdbcType=VARCHAR},
-      </if>
-      <if test="phone != null" >
-        #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="img != null" >
-        #{img,jdbcType=VARCHAR},
-      </if>
-      <if test="email != null" >
-        #{email,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="cn.youye.smt.entity.User" >
-    update user
-    <set >
-      <if test="userName != null" >
-        user_name = #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="loginName != null" >
-        login_name = #{loginName,jdbcType=VARCHAR},
-      </if>
-      <if test="password != null" >
-        password = #{password,jdbcType=VARCHAR},
-      </if>
-      <if test="phone != null" >
-        phone = #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="img != null" >
-        img = #{img,jdbcType=VARCHAR},
-      </if>
-      <if test="email != null" >
-        email = #{email,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=VARCHAR}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="cn.youye.smt.entity.User" >
-    update user
-    set user_name = #{userName,jdbcType=VARCHAR},
-      login_name = #{loginName,jdbcType=VARCHAR},
-      password = #{password,jdbcType=VARCHAR},
-      phone = #{phone,jdbcType=VARCHAR},
-      img = #{img,jdbcType=VARCHAR},
-      email = #{email,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=VARCHAR}
-  </update>
+    <sql id="leftJoins">
+        <include refid="UserColumns"/>
+    </sql>
+    <select id="findList" resultType="user">
+        SELECT
+        <include refid="UserColumns"/>
+        FROM user a
+        <where>
+            <if test="userName!=null and userName!=''">
+                a.user_name=#{userName}
+            </if>
+            <if test="role!=null and role.id!=null and role.id!=''">
+                a.role_id=#{role.id}
+            </if>
+        </where>
+    </select>
+
 </mapper>
